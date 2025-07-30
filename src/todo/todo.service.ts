@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { Todo, TodoDocument } from './schema/todo.schema';
 
 @Injectable()
@@ -20,11 +20,18 @@ export class TodoService {
     return alltoDos;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} todo`;
+  async findOne(id: string) {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid ID format: ${id}`);
+    }
+    const response = await this.todoModel.findById(id).exec();
+    if (!response) {
+      throw new NotFoundException(`Todo with id ${id} not found.`);
+    }
+    return response;
   }
 
-  update(id: number, updateTodoDto: UpdateTodoDto) {
+  update(id: string, updateTodoDto: UpdateTodoDto) {
     return `This action updates a #${id} todo`;
   }
 
