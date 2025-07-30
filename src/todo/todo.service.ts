@@ -36,6 +36,9 @@ export class TodoService {
   }
 
   async remove(id: string): Promise<string> {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid ID format: ${id}`);
+    }
     const response = await this.todoModel.findByIdAndDelete(id).exec();
 
     if (!response) {
