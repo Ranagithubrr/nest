@@ -31,8 +31,19 @@ export class TodoService {
     return response;
   }
 
-  update(id: string, updateTodoDto: UpdateTodoDto) {
-    return `This action updates a #${id} todo`;
+  async update(id: string, updateTodoDto: UpdateTodoDto) {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid ID format: ${id}`);
+    }
+    const response = await this.todoModel.findByIdAndUpdate(
+      id,
+      updateTodoDto,
+      { new: true }
+    ).exec();
+    if (!response) {
+      throw new NotFoundException(`Todo with id ${id} not found.`);
+    }
+    return response;
   }
 
   async remove(id: string): Promise<string> {
