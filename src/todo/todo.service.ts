@@ -10,6 +10,9 @@ export class TodoService {
   constructor(@InjectModel(Todo.name) private todoModel: Model<TodoDocument>) { }
 
   async create(createTodoDto: CreateTodoDto): Promise<Todo> {
+    if (await this.todoModel.exists({ title: createTodoDto.title })) {
+      throw new BadRequestException(`Todo with title ${createTodoDto.title} already exists.`);
+    }
     const createdTodo = new this.todoModel(createTodoDto);
     return createdTodo.save();
   }
