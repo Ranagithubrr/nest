@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { TodoModule } from './todo/todo.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   controllers: [AppController],
@@ -14,6 +15,7 @@ import { TodoModule } from './todo/todo.module';
     }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     TodoModule,
+    UserModule,
   ],
 })
 export class AppModule { }
