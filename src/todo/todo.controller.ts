@@ -22,5 +22,5 @@ export class TodoController {
     return this.todoService.createTodo(createTodoDto);
   }
 
-  
+
 }
