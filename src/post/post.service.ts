@@ -13,11 +13,19 @@ export class PostService {
         try {
             return await this.postModel.find();
         } catch {
-            throw new BadRequestException()
+            throw new BadRequestException("Failed to fetch posts")
         }
     }
 
-    CreatePost(createPostDto: CreatePostDto) {
-        return createPostDto
+    async CreatePost(createPostDto: CreatePostDto) {
+        try {
+            const post = await this.postModel.create(createPostDto)
+            return {
+                message: "post created successfully",
+                data: post
+            }
+        } catch {
+            throw new BadRequestException("Failed to create post")
+        }
     }
 }
