@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from './schema/post.schema';
@@ -28,4 +28,16 @@ export class PostService {
             throw new BadRequestException("Failed to create post")
         }
     }
+
+    async DeletePost(id: string) {
+        const post = await this.postModel.findByIdAndDelete(id);
+        if (!post) {
+            throw new NotFoundException("Post not found");
+        }
+        return {
+            message: "Post deleted successfully",
+            data: post
+        };
+    }
+
 }
