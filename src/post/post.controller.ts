@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('post')
 export class PostController {
@@ -12,6 +13,7 @@ export class PostController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   CreatePost(@Body() createPostDto: CreatePostDto) {
     return this.postService.CreatePost(createPostDto);
   }
