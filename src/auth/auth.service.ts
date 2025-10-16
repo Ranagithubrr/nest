@@ -47,10 +47,8 @@ export class AuthService {
             throw new BadRequestException("Credentials must be provided")
         }
         const user = await this.userModel.findOne({ email: loginDto.email });
-        if (!user) {
-            throw new UnauthorizedException("Invalid Credentials")
-        }
-        if (user.password !== loginDto.password) {
+
+        if (!user || !(await bcrypt.compare(loginDto.password, user.password))) {
             throw new UnauthorizedException("Invalid Credentials")
         }
         const { password, ...userWithoutPassword } = user.toObject();
