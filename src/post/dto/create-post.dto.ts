@@ -1,23 +1,28 @@
-import { IsNotEmpty, IsString, IsUrl } from "class-validator";
+import { IsMongoId, IsNotEmpty, IsString, IsUrl } from "class-validator";
 
 export class CreatePostDto {
     @IsString()
-    @IsNotEmpty()    
+    @IsNotEmpty()
     title: string;
 
 
     @IsString()
-    @IsNotEmpty()    
+    @IsNotEmpty()
     description: string;
 
 
     @IsString()
-    @IsNotEmpty()    
+    @IsNotEmpty()
     @IsUrl()
     thumbnail: string;
 
     @IsString()
-    @IsNotEmpty()    
+    @IsNotEmpty()
     author: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @IsMongoId()
+    authorId: string;
 
 }

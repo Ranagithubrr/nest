@@ -3,6 +3,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from './schema/post.schema';
 import { Model } from 'mongoose';
+import { EditPostDto } from './dto/update-post.dot';
 
 @Injectable()
 export class PostService {
@@ -36,6 +37,17 @@ export class PostService {
         }
         return {
             message: "Post deleted successfully",
+            data: post
+        };
+    }
+
+    async UpdatePost(id: string, updatePostDto: EditPostDto) {
+        const post = await this.postModel.findByIdAndUpdate(id, updatePostDto, { new: true });
+        if (!post) {
+            throw new NotFoundException("Post not found");
+        }
+        return {
+            message: "Post updated successfully",
             data: post
         };
     }
