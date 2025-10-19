@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from './schema/post.schema';
@@ -30,26 +30,43 @@ export class PostService {
         }
     }
 
-    async DeletePost(id: string) {
-        const post = await this.postModel.findByIdAndDelete(id);
+    async DeletePost(id: string, userId: string) {
+        const post = await this.postModel.findById(id);
         if (!post) {
             throw new NotFoundException("Post not found");
         }
+
+        if (post.authorId.toString() !== userId) {
+            throw new ForbiddenException("You are not authorized to delete this post");
+        }
+
+        await post.deleteOne();
+
         return {
             message: "Post deleted successfully",
-            data: post
+            data: post,
         };
     }
 
-    async UpdatePost(id: string, updatePostDto: EditPostDto) {
-        const post = await this.postModel.findByIdAndUpdate(id, updatePostDto, { new: true });
+
+    async UpdatePost(id: string, updatePostDto: EditPostDto, userId: string) {
+        const post = await this.postModel.findById(id);
         if (!post) {
             throw new NotFoundException("Post not found");
         }
+
+        if (post.authorId.toString() !== userId) {
+            throw new ForbiddenException("You are not authorized to update this post");
+        }
+
+        Object.assign(post, updatePostDto);
+        await post.save();
+
         return {
             message: "Post updated successfully",
-            data: post
+            data: post,
         };
     }
+
 
 }
