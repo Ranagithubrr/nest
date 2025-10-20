@@ -69,4 +69,11 @@ export class PostService {
     }
 
 
+    async GetAllPostsByUser(userId: string) {
+        try {
+            return await this.postModel.find({ authorId: userId });
+        } catch {
+            throw new BadRequestException("Failed to fetch posts for the user")
+        }
+    }
 }

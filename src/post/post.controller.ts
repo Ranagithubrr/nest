@@ -37,4 +37,10 @@ export class PostController {
   UpdatePost(@Param('id') id: string, @Body() updatePostDto: EditPostDto, @Req() req: RequestWithUser) {
     return this.postService.UpdatePost(id, updatePostDto, req?.user?.userId);
   }
+
+  @Get('/user')
+  @UseGuards(JwtAuthGuard)
+  GetAllPostsByUser(@Req() req: RequestWithUser) {
+    return this.postService.GetAllPostsByUser(req?.user?.userId);
+  }
 }
