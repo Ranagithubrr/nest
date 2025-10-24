@@ -20,11 +20,6 @@ export class PostController {
     return this.postService.GetAllPosts();
   }
 
-  @Get(':id')
-  GetSinglePost(@Param('id') id: string) {
-    return this.postService.GetSinglePost(id);
-  }
-
   @Post()
   @UseGuards(JwtAuthGuard)
   CreatePost(@Body() createPostDto: CreatePostDto) {
@@ -47,5 +42,10 @@ export class PostController {
   @UseGuards(JwtAuthGuard)
   GetAllPostsByUser(@Req() req: RequestWithUser) {
     return this.postService.GetAllPostsByUser(req?.user?.userId);
+  }
+
+  @Get(':id')
+  GetSinglePost(@Param('id') id: string) {
+    return this.postService.GetSinglePost(id);
   }
 }
