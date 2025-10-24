@@ -18,6 +18,18 @@ export class PostService {
         }
     }
 
+    async GetSinglePost(id: string) {
+        try {
+            const post = await this.postModel.findById(id);
+            if (!post) {
+                throw new NotFoundException("Post not found");
+            }
+            return post;
+        } catch {
+            throw new BadRequestException("Failed to fetch post");
+        }
+    }
+
     async CreatePost(createPostDto: CreatePostDto) {
         try {
             const post = await this.postModel.create(createPostDto)
