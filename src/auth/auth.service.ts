@@ -15,7 +15,8 @@ export class AuthService {
     ) { }
 
     async GetUsers() {
-        return 'this returns all users'
+        const users = await this.userModel.find().select("-password");
+        return users;
     }
 
     async CreateUser(createUserDto: CreateUserDto) {
@@ -61,5 +62,11 @@ export class AuthService {
             user: userWithoutPassword,
             access_token
         }
+    }
+
+    async findUsersByIds(ids: string[]) {
+        return this.userModel
+            .find({ _id: { $in: ids } })
+            .select('-password');
     }
 }
